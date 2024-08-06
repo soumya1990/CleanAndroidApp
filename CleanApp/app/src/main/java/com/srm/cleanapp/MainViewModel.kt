@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val adder: NumberAdder = NumberAdder()) : ViewModel() {
@@ -14,8 +13,10 @@ class MainViewModel(private val adder: NumberAdder = NumberAdder()) : ViewModel(
         private set
 
     fun calculateSum(a: String, b: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            resultState = adder.add(a, b)
+        viewModelScope.launch {
+            adder.addTwo(a, b).collect { value ->
+                resultState = value
+            }
         }
     }
 }
